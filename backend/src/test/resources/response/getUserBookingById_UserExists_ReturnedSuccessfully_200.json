@@ -1,0 +1,11 @@
+[
+  {
+    "bookingId": "0bb4cd49-78cf-4824-8f79-9111e01a026a",
+    "startTime": "2022-08-08T13:00:00Z",
+    "endTime": "2022-08-08T14:00:00Z",
+    "room": {
+      "roomId": "56680e1c-02ad-4210-8dfd-6b3effcbd7c7",
+      "size": 5
+    }
+  }
+]
