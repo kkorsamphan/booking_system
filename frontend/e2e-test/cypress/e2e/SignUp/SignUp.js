@@ -1,38 +1,43 @@
-import { Given, When, Then, And } from "@badeball/cypress-cucumber-preprocessor";
+import {
+	Given,
+	When,
+	Then,
+	And
+} from '@badeball/cypress-cucumber-preprocessor';
 
-Given("I am an unregistered user", () => {
-	return "pending"
+Given('I visit the website', () => {
+	cy.visit('/');
 });
 
-When("I visit the website", () => {
-	return "pending"
+And('I see a sign up button', () => {
+	cy.get('button').contains('Sign Up');
 });
 
-
-Then("I should see a sign up button", () => {
-	return "pending"
+When('I click on a sign up button', () => {
+	cy.get(`[id=landing-page-sign-up-button]`).click();
 });
 
-When("I click on a sign up button", () => {
-	return "pending"
+Then('I see a sign up page', () => {
+	cy.contains('Create');
+	cy.contains('New Account');
 });
 
-Then("I see a sign up page", () => {
-	return "pending"
+And('I fill in the email field with value {string}', (email) => {
+	cy.get(`[id=sign-up-form-email-input]`).type(email);
 });
 
-And("I should see a sign up form", () => {
-	return "pending"
+And('I fill in the password field with value {string}', (password) => {
+	cy.get(`[id=sign-up-form-password-input]`).type(password);
 });
 
-And("I fill in the sign up form with {string} and {string}", (email, password) => {
-	return "pending"
+When('I click a create new account button', () => {
+	cy.get(`[id=sign-up-form-create-new-account-button]`).click();
 });
 
-When("I click a create new account button", () => {
-	return "pending"
+Then('I should see a make booking page', (text) => {
+	cy.contains('Make My Booking');
 });
 
-Then("I see a confirmation message", () => {
-	return "pending"
+Then('I should see an error message {string}', (text) => {
+	cy.contains(text);
 });

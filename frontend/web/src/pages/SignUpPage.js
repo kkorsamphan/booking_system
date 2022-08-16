@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -10,7 +11,6 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -26,7 +26,14 @@ const SignUpValidationSchema = Yup.object().shape({
 });
 
 const SignUpPage = (props) => {
+	const navigate = useNavigate();
+
 	const [showPassword, setShowPassword] = useState(false);
+	const [alertConfig, setAlertConfig] = useState({
+		show: false,
+		type: '',
+		message: ''
+	});
 
 	const handleClickShowPassword = () => {
 		setShowPassword(!showPassword);
@@ -43,13 +50,13 @@ const SignUpPage = (props) => {
 			}}
 		>
 			<Grid container spacing={2}>
-				<Grid item md={6}>
+				<Grid item sm={12} md={6}>
 					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
 						<h1>Create</h1>
 						<h1>New Account</h1>
 					</Box>
 				</Grid>
-				<Grid item md={6}>
+				<Grid item sm={12} md={6}>
 					<Formik
 						initialValues={{
 							firstName: '',
@@ -60,12 +67,24 @@ const SignUpPage = (props) => {
 						validateOnChange={false}
 						validateOnBlur={false}
 						validationSchema={SignUpValidationSchema}
-						onSubmit={(values, { setSubmitting }) => {
+						onSubmit={async (values, { setSubmitting }) => {
 							setSubmitting(false);
-							console.log('values', values);
 
-							const response = UserService.register(values);
-							console.log('response', response);
+							const response = await UserService.register(values);
+							if (response && response.status === 200) {
+								setAlertConfig({
+									show: false,
+									type: '',
+									message: ''
+								});
+								navigate('/make_booking');
+							} else {
+								setAlertConfig({
+									show: true,
+									type: 'error',
+									message: 'You failed to sign up'
+								});
+							}
 						}}
 					>
 						{({
@@ -73,13 +92,21 @@ const SignUpPage = (props) => {
 							errors,
 							handleSubmit,
 							isSubmitting
-							/* and other goodies */
 						}) => (
 							<form onSubmit={handleSubmit}>
 								<Paper
 									elevation={0}
 									sx={{ p: 4, borderRadius: 6 }}
 								>
+									{alertConfig.show && (
+										<Alert
+											severity={alertConfig.type}
+											sx={{ mb: 2, borderRadius: 2.5 }}
+										>
+											{alertConfig.message}
+										</Alert>
+									)}
+
 									{Object.keys(errors).length > 0 && (
 										<Alert
 											severity="error"
@@ -97,24 +124,36 @@ const SignUpPage = (props) => {
 
 									<Box>
 										<FormInput
+											inputProps={{
+												id: 'sign-up-form-first-name-input'
+											}}
 											label="First Name"
 											placeholder="First Name"
 											fullWidth
 											{...getFieldProps('firstName')}
 										/>
 										<FormInput
+											inputProps={{
+												id: 'sign-up-form-last-name-input'
+											}}
 											label="Last Name"
 											placeholder="Last Name"
 											fullWidth
 											{...getFieldProps('lastName')}
 										/>
 										<FormInput
+											inputProps={{
+												id: 'sign-up-form-email-input'
+											}}
 											fullWidth
 											label="Email"
 											placeholder="Email"
 											{...getFieldProps('email')}
 										/>
 										<FormInput
+											inputProps={{
+												id: 'sign-up-form-password-input'
+											}}
 											fullWidth
 											label="Password"
 											placeholder="Password"
@@ -144,7 +183,7 @@ const SignUpPage = (props) => {
 										}}
 									>
 										<Button
-											id="sign-up-page-create-new-account-button"
+											id="sign-up-form-create-new-account-button"
 											disableElevation
 											variant="contained"
 											color="primary"

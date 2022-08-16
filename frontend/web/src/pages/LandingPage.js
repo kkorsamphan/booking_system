@@ -1,12 +1,11 @@
 import React from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 
 const LandingPage = (props) => {
 	const navigate = useNavigate();
@@ -22,13 +21,13 @@ const LandingPage = (props) => {
 			}}
 		>
 			<Grid container spacing={2}>
-				<Grid item md={6}>
+				<Grid item sm={12} md={6}>
 					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
 						<h1>Meeting</h1>
 						<h1>Room Booking</h1>
 					</Box>
 				</Grid>
-				<Grid item md={6}>
+				<Grid item sm={12} md={6}>
 					<Paper
 						elevation={0}
 						sx={{
@@ -50,34 +49,38 @@ const LandingPage = (props) => {
 								booking.
 							</Box>
 						</Box>
-						<Box sx={{ display: 'flex', flexDirection: 'column' }}>
-							<Button
-								id="landing-page-sign-in-button"
-								disableElevation
-								variant="contained"
-								color="primary"
-								size="large"
-								sx={{ my: 1 }}
-								onClick={() => {
-									navigate('/login');
-								}}
-							>
-								Login
-							</Button>
-							<Button
-								id="landing-page-sign-up-button"
-								disableElevation
-								variant="outlined"
-								color="primary"
-								size="large"
-								sx={{ my: 1 }}
-								onClick={() => {
-									navigate('/sign_up');
-								}}
-							>
-								Sign Up
-							</Button>
-						</Box>
+						<Grid container spacing={2}>
+							<Grid item xs={12} sm={12} md={6}>
+								<Button
+									id="landing-page-login-button"
+									disableElevation
+									fullWidth
+									variant="contained"
+									color="primary"
+									size="large"
+									onClick={() => {
+										navigate('/login');
+									}}
+								>
+									Login
+								</Button>
+							</Grid>
+							<Grid item xs={12} sm={12} md={6}>
+								<Button
+									id="landing-page-sign-up-button"
+									disableElevation
+									fullWidth
+									variant="outlined"
+									color="primary"
+									size="large"
+									onClick={() => {
+										navigate('/sign_up');
+									}}
+								>
+									Sign Up
+								</Button>
+							</Grid>
+						</Grid>
 					</Paper>
 				</Grid>
 			</Grid>

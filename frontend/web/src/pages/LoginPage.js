@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -10,10 +11,11 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import * as UserService from '../services/user';
 
 import { FormInput } from '../components/FormInput';
 
@@ -25,7 +27,14 @@ const LoginValidationSchema = Yup.object().shape({
 });
 
 const LoginPage = (props) => {
+	const navigate = useNavigate();
+
 	const [showPassword, setShowPassword] = useState(false);
+	const [alertConfig, setAlertConfig] = useState({
+		show: false,
+		type: '',
+		message: ''
+	});
 
 	const handleClickShowPassword = () => {
 		setShowPassword(!showPassword);
@@ -51,21 +60,34 @@ const LoginPage = (props) => {
 				<Grid item md={6}>
 					<Formik
 						initialValues={{ email: '', password: '' }}
+						validateOnChange={false}
+						validateOnBlur={false}
 						validationSchema={LoginValidationSchema}
-						onSubmit={(values, { setSubmitting }) => {
+						onSubmit={async (values, { setSubmitting }) => {
 							setSubmitting(false);
-							console.log(values);
+							const response = await UserService.login(values);
+							if (response && response.status === 200) {
+								setAlertConfig({
+									show: false,
+									type: '',
+									message: ''
+								});
+								navigate('/make_booking');
+							} else {
+								setAlertConfig({
+									show: true,
+									type: 'error',
+									message:
+										'Incorrect username or password. Please try again.'
+								});
+							}
 						}}
 					>
 						{({
-							values,
+							getFieldProps,
 							errors,
-							touched,
-							handleChange,
-							handleBlur,
 							handleSubmit,
 							isSubmitting
-							/* and other goodies */
 						}) => (
 							<form onSubmit={handleSubmit}>
 								<Paper
@@ -78,6 +100,15 @@ const LoginPage = (props) => {
 										minHeight: 380
 									}}
 								>
+									{alertConfig.show && (
+										<Alert
+											severity={alertConfig.type}
+											sx={{ mb: 2, borderRadius: 2.5 }}
+										>
+											{alertConfig.message}
+										</Alert>
+									)}
+
 									{Object.keys(errors).length > 0 && (
 										<Alert
 											severity="error"
@@ -95,14 +126,18 @@ const LoginPage = (props) => {
 
 									<Box sx={{ flex: 1 }}>
 										<FormInput
+											inputProps={{
+												id: 'login-form-email-input'
+											}}
 											fullWidth
 											label="Email"
 											placeholder="Email"
-											value={values.email}
-											onChange={handleChange}
-											onBlur={handleBlur}
+											{...getFieldProps('email')}
 										/>
 										<FormInput
+											inputProps={{
+												id: 'login-form-password-input'
+											}}
 											fullWidth
 											label="Password"
 											placeholder="Password"
@@ -122,9 +157,7 @@ const LoginPage = (props) => {
 													</IconButton>
 												</InputAdornment>
 											}
-											value={values.password}
-											onChange={handleChange}
-											onBlur={handleBlur}
+											{...getFieldProps('password')}
 										/>
 									</Box>
 									<Box
@@ -134,7 +167,7 @@ const LoginPage = (props) => {
 										}}
 									>
 										<Button
-											id="login-page-login-button"
+											id="login-form-login-button"
 											disableElevation
 											variant="contained"
 											color="primary"

@@ -5,11 +5,11 @@ import {
     And
 } from '@badeball/cypress-cucumber-preprocessor';
 
-When('I visit the website', () => {
+Given('I visit the website', () => {
     cy.visit('/');
 });
 
-Then(
+And(
     'I should see a landing page with a signin button and signup button',
     () => {
         cy.get('button').contains('Login');

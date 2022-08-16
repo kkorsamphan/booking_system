@@ -161,6 +161,25 @@ public class UserControllerTest {
     }
 
     @Test
+    public void createUser_EmailExists_ReturnedSuccessfully_400() {
+        CreateUserPayload newUser  = new CreateUserPayload();
+        newUser.setFirstName("Jane");
+        newUser.setLastName("Doe");
+        newUser.setEmail("xxx@example.com");
+        newUser.setPassword("password");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(newUser)
+                .when().post("/api/register")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
     public void getUserBookingById_UserExists_ReturnedSuccessfully_200() {
         given().log().all()
                 .with()

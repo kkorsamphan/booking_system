@@ -55,6 +55,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody CreateUserPayload user) {
 
+        Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
+        if (userOpt.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         User newUser = new User();
         newUser.setEmail(user.getEmail());
         newUser.setPassword(user.getPassword());
