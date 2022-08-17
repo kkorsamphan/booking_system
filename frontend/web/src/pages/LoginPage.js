@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -18,6 +17,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import * as UserService from '../services/user';
 
 import { FormInput } from '../components/FormInput';
+import { GlobalLayout } from '../components/Layouts';
 
 const LoginValidationSchema = Yup.object().shape({
 	email: Yup.string()
@@ -41,15 +41,7 @@ const LoginPage = (props) => {
 	};
 
 	return (
-		<Container
-			fixed
-			sx={{
-				height: '100vh',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center'
-			}}
-		>
+		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item md={6}>
 					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
@@ -185,7 +177,7 @@ const LoginPage = (props) => {
 					</Formik>
 				</Grid>
 			</Grid>
-		</Container>
+		</GlobalLayout>
 	);
 };
 

@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -16,6 +15,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import * as UserService from '../services/user';
+import { GlobalLayout } from '../components/Layouts';
 import { FormInput } from '../components/FormInput';
 
 const SignUpValidationSchema = Yup.object().shape({
@@ -40,15 +40,7 @@ const SignUpPage = (props) => {
 	};
 
 	return (
-		<Container
-			fixed
-			sx={{
-				height: '100vh',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center'
-			}}
-		>
+		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item sm={12} md={6}>
 					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
@@ -201,7 +193,7 @@ const SignUpPage = (props) => {
 					</Formik>
 				</Grid>
 			</Grid>
-		</Container>
+		</GlobalLayout>
 	);
 };
 

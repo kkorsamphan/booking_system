@@ -4,22 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
+
+import { GlobalLayout } from '../components/Layouts';
 
 const LandingPage = (props) => {
 	const navigate = useNavigate();
 
 	return (
-		<Container
-			fixed
-			sx={{
-				height: '100vh',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center'
-			}}
-		>
+		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item sm={12} md={6}>
 					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
@@ -84,7 +77,7 @@ const LandingPage = (props) => {
 					</Paper>
 				</Grid>
 			</Grid>
-		</Container>
+		</GlobalLayout>
 	);
 };
 
