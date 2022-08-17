@@ -9,26 +9,23 @@ import com.paloit.training.sp01.model.request.LoginUserPayload;
 import com.paloit.training.sp01.repository.BookingRepository;
 import com.paloit.training.sp01.repository.RoomRepository;
 import com.paloit.training.sp01.repository.UserRepository;
-import com.paloit.training.sp01.util.FileReader;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.Instant;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
@@ -38,20 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserControllerTest {
 
     @Autowired
-    FileReader fileReader;
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
     RoomRepository roomRepo;
-
     @Autowired
     UserRepository userRepo;
-
     @Autowired
     BookingRepository bookingRepo;
-
+    @LocalServerPort
+    private int port;
     private User testUser;
     private Room testRoom;
     private Booking testBooking;
@@ -84,7 +74,7 @@ public class UserControllerTest {
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         // order to delete is mattered
         bookingRepo.deleteAll();
         roomRepo.deleteAll();
@@ -93,7 +83,7 @@ public class UserControllerTest {
 
     @Test
     public void loginUser_ReturnedSuccessfully_200() {
-        LoginUserPayload payload  = new LoginUserPayload();
+        LoginUserPayload payload = new LoginUserPayload();
         payload.setEmail("xxx@example.com");
         payload.setPassword("password");
 
@@ -102,14 +92,15 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(payload)
-                .when().post("/api/login")
+                .when()
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     public void loginUser_UserNotExists_ReturnedSuccessfully_401() {
-        LoginUserPayload payload  = new LoginUserPayload();
+        LoginUserPayload payload = new LoginUserPayload();
         payload.setEmail("newuser@example.com");
         payload.setPassword("password");
 
@@ -118,14 +109,15 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(payload)
-                .when().post("/api/login")
+                .when()
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
     public void loginUser_IncorrectPassword_ReturnedSuccessfully_401() {
-        LoginUserPayload payload  = new LoginUserPayload();
+        LoginUserPayload payload = new LoginUserPayload();
         payload.setEmail("xxx@example.com");
         payload.setPassword("not_password");
 
@@ -134,14 +126,15 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(payload)
-                .when().post("/api/login")
+                .when()
+                .post("/api/login")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
     public void createUser_ReturnedSuccessfully_200() {
-        CreateUserPayload newUser  = new CreateUserPayload();
+        CreateUserPayload newUser = new CreateUserPayload();
         newUser.setFirstName("Kunlanit");
         newUser.setLastName("Korsamphan");
         newUser.setEmail("iamoyua@gmail.com");
@@ -152,7 +145,8 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(newUser)
-                .when().post("/api/register")
+                .when()
+                .post("/api/register")
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
@@ -162,7 +156,7 @@ public class UserControllerTest {
 
     @Test
     public void createUser_EmailExists_ReturnedSuccessfully_400() {
-        CreateUserPayload newUser  = new CreateUserPayload();
+        CreateUserPayload newUser = new CreateUserPayload();
         newUser.setFirstName("Jane");
         newUser.setLastName("Doe");
         newUser.setEmail("xxx@example.com");
@@ -173,7 +167,8 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(newUser)
-                .when().post("/api/register")
+                .when()
+                .post("/api/register")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
@@ -184,7 +179,8 @@ public class UserControllerTest {
         given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/users/{userId}/bookings", testUser.getUserId())
+                .when()
+                .get("/api/users/{userId}/bookings", testUser.getUserId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .and()
@@ -198,10 +194,10 @@ public class UserControllerTest {
 
     @Test
     public void getUserBookingById_UserNotExists_ReturnedSuccessfully_404() {
-        given().log().all()
-                .with()
+        given().log().all().with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/users/{userId}/bookings", UUID.randomUUID())
+                .when()
+                .get("/api/users/{userId}/bookings", UUID.randomUUID())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
@@ -219,9 +215,9 @@ public class UserControllerTest {
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(newBooking)
-                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
-                .then()
-                .statusCode(HttpStatus.OK.value());
+                .when()
+                .post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then().statusCode(HttpStatus.OK.value());
 
         var bookingCount = bookingRepo.count();
         assertEquals(2, bookingCount);
@@ -237,12 +233,11 @@ public class UserControllerTest {
         given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(newBooking)
-                .when().post("/api/users/{userId}/bookings", UUID.randomUUID())
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when()
+                .post("/api/users/{userId}/bookings", UUID.randomUUID())
                 .then()
-                .assertThat()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .assertThat().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -255,12 +250,10 @@ public class UserControllerTest {
         given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(newBooking)
-                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when()
+                .post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -270,11 +263,10 @@ public class UserControllerTest {
         newBooking.setStartTime("2022-08-08T13:00:00Z");
         newBooking.setEndTime("2022-08-08T14:00:00Z");
 
-        var response = given().log().all()
+        given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(newBooking)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
                 .when().post("/api/users/{userId}/bookings", testUser.getUserId())
                 .then()
                 .assertThat()

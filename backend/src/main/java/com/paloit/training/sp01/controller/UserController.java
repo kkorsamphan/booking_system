@@ -1,6 +1,5 @@
 package com.paloit.training.sp01.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
 import com.paloit.training.sp01.model.User;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +28,18 @@ public class UserController {
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
 
-    public UserController(UserRepository userRepository, BookingRepository bookingRepository, RoomRepository roomRepository) {
+    public UserController(
+            UserRepository userRepository,
+            BookingRepository bookingRepository,
+            RoomRepository roomRepository
+    ) {
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.roomRepository = roomRepository;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser (@RequestBody LoginUserPayload payload) {
+    public ResponseEntity<User> loginUser(@RequestBody LoginUserPayload payload) {
         Optional<User> userOpt = userRepository.findByEmail(payload.getEmail());
         if (userOpt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -89,7 +91,10 @@ public class UserController {
     }
 
     @PostMapping("/users/{userId}/bookings")
-    public ResponseEntity<Booking> createUserBooking(@PathVariable UUID userId, @RequestBody CreateUserBookingPayload bookingRequest) {
+    public ResponseEntity<Booking> createUserBooking(
+            @PathVariable UUID userId,
+            @RequestBody CreateUserBookingPayload bookingRequest
+    ) {
         var bookingStartTime = Instant.parse(bookingRequest.getStartTime());
         var bookingEndTime = Instant.parse(bookingRequest.getEndTime());
 

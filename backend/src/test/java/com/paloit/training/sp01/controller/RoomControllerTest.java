@@ -4,7 +4,6 @@ import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
 import com.paloit.training.sp01.model.User;
 import com.paloit.training.sp01.model.request.CreateRoomPayload;
-import com.paloit.training.sp01.model.request.CreateUserPayload;
 import com.paloit.training.sp01.repository.BookingRepository;
 import com.paloit.training.sp01.repository.RoomRepository;
 import com.paloit.training.sp01.repository.UserRepository;
@@ -30,18 +29,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RoomControllerTest {
-    @LocalServerPort
-    private int port;
-
     @Autowired
     RoomRepository roomRepo;
-
     @Autowired
     UserRepository userRepo;
-
     @Autowired
     BookingRepository bookingRepo;
-
+    @LocalServerPort
+    private int port;
     private Room testRoom1;
     private Room testRoom2;
     private Room testRoom3;
@@ -84,7 +79,7 @@ public class RoomControllerTest {
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         // order to delete is mattered
         bookingRepo.deleteAll();
         roomRepo.deleteAll();
@@ -96,7 +91,7 @@ public class RoomControllerTest {
         given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .param("roomSize",6)
+                .param("roomSize", 6)
                 .param("startTime", "2022-08-08T16:00:00Z")
                 .param("endTime", "2022-08-08T17:00:00Z")
                 .when().get("/api/rooms")
@@ -109,7 +104,7 @@ public class RoomControllerTest {
 
     @Test
     public void createRoom_ReturnedSuccessfully_200() {
-        CreateRoomPayload newRoom  = new CreateRoomPayload();
+        CreateRoomPayload newRoom = new CreateRoomPayload();
         newRoom.setSize(10);
 
         given().log().all()

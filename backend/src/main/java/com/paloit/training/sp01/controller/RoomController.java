@@ -2,7 +2,6 @@ package com.paloit.training.sp01.controller;
 
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
-import com.paloit.training.sp01.model.User;
 import com.paloit.training.sp01.repository.RoomRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,15 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<ArrayList<Room>> getAvailableRooms(@RequestParam Integer roomSize, @RequestParam String startTime, @RequestParam String endTime) {
+    public ResponseEntity<ArrayList<Room>> getAvailableRooms(
+            @RequestParam Integer roomSize,
+            @RequestParam String startTime,
+            @RequestParam String endTime
+    ) {
 
         var response = new ArrayList<Room>();
-        roomRepository.findAvailableRooms(roomSize, Instant.parse(startTime), Instant.parse(endTime)).forEach(room -> response.add(room));
+        roomRepository.findAvailableRooms(roomSize, Instant.parse(startTime), Instant.parse(endTime))
+                .forEach(room -> response.add(room));
 
         return ResponseEntity.ok(response);
     }

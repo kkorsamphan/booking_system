@@ -1,8 +1,8 @@
 package com.paloit.training.sp01.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,9 +11,10 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "user_account")
-@JsonIgnoreProperties({ "password" })
+@JsonIgnoreProperties({"password"})
 public class User {
     @Id
+    // KEPT IT FOR REFERENCE
     // @GeneratedValue(generator = "UUID")
     // @GenericGenerator(
     //         name = "UUID",

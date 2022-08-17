@@ -1,8 +1,7 @@
 package com.paloit.training.sp01.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,7 +18,9 @@ public class Room {
 
     private Integer size;
 
-//     @JsonManagedReference
+    // KEPT IT FOR REFERENCE
+    // @JsonManagedReference
+
     // mapped by entity
     @OneToMany(mappedBy = "room")
     @JsonIgnoreProperties("room")

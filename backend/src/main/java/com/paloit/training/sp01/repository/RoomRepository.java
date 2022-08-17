@@ -12,6 +12,16 @@ import java.util.UUID;
 
 @Repository
 public interface RoomRepository extends PagingAndSortingRepository<Room, UUID> {
-    @Query("SELECT r FROM Room r LEFT JOIN r.bookings bk WHERE r.size >= :roomSize AND ( bk IS NULL OR NOT ( bk.startTime < :endTime AND bk.endTime > :startTime ) )")
-    List<Room> findAvailableRooms(@Param("roomSize") Integer roomSize, @Param("startTime") Instant startTime, @Param("endTime") Instant endTime);
+    @Query("" +
+            "SELECT r " +
+            "FROM Room r " +
+            "LEFT JOIN r.bookings bk " +
+            "WHERE r.size >= :roomSize " +
+            "AND ( bk IS NULL OR NOT ( bk.startTime < :endTime AND bk.endTime > :startTime ) )"
+    )
+    List<Room> findAvailableRooms(
+            @Param("roomSize") Integer roomSize,
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime
+    );
 }

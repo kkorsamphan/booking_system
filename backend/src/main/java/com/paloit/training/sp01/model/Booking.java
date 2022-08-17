@@ -1,9 +1,8 @@
 package com.paloit.training.sp01.model;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -23,13 +22,15 @@ public class Booking {
     private Instant endTime;
 
     @JsonBackReference
-//    @ToString.Exclude
+    // KEPT IT FOR REFERENCE
+    // @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @JsonBackReference
-//    @ToString.Exclude
+    // KEPT IT FOR REFERENCE
+    // @JsonBackReference
+    // @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     @JsonIgnoreProperties("bookings")

@@ -12,6 +12,15 @@ import java.util.UUID;
 @Repository
 public interface BookingRepository extends PagingAndSortingRepository<Booking, UUID> {
 
-    @Query("SELECT COUNT(bk) FROM Booking bk WHERE bk.room.roomId = :roomId AND ( bk.startTime < :endTime AND bk.endTime > :startTime )")
-    Long countBookingsByRoomId(@Param("roomId") UUID roomId, @Param("startTime") Instant startTime, @Param("endTime") Instant endTime);
+    @Query("" +
+            "SELECT COUNT(bk) " +
+            "FROM Booking bk " +
+            "WHERE bk.room.roomId = :roomId " +
+            "AND ( bk.startTime < :endTime AND bk.endTime > :startTime )"
+    )
+    Long countBookingsByRoomId(
+            @Param("roomId") UUID roomId,
+            @Param("startTime") Instant startTime,
+            @Param("endTime") Instant endTime
+    );
 }
