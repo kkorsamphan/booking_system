@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -14,9 +13,10 @@ import Paper from '@mui/material/Paper';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import * as UserService from '../services/user';
+import useAuth from '../context/auth/useAuth';
+
 import { GlobalLayout } from '../components/Layouts';
-import { FormInput } from '../components/FormInput';
+import { FormInput } from '../components/Form';
 
 const SignUpValidationSchema = Yup.object().shape({
 	email: Yup.string()
@@ -26,14 +26,9 @@ const SignUpValidationSchema = Yup.object().shape({
 });
 
 const SignUpPage = (props) => {
-	const navigate = useNavigate();
+	const { signUp, authError } = useAuth();
 
 	const [showPassword, setShowPassword] = useState(false);
-	const [alertConfig, setAlertConfig] = useState({
-		show: false,
-		type: '',
-		message: ''
-	});
 
 	const handleClickShowPassword = () => {
 		setShowPassword(!showPassword);
@@ -61,22 +56,7 @@ const SignUpPage = (props) => {
 						validationSchema={SignUpValidationSchema}
 						onSubmit={async (values, { setSubmitting }) => {
 							setSubmitting(false);
-
-							const response = await UserService.register(values);
-							if (response && response.status === 200) {
-								setAlertConfig({
-									show: false,
-									type: '',
-									message: ''
-								});
-								navigate('/make_booking');
-							} else {
-								setAlertConfig({
-									show: true,
-									type: 'error',
-									message: 'You failed to sign up'
-								});
-							}
+							signUp(values);
 						}}
 					>
 						{({
@@ -90,12 +70,12 @@ const SignUpPage = (props) => {
 									elevation={0}
 									sx={{ p: 4, borderRadius: 6 }}
 								>
-									{alertConfig.show && (
+									{authError.show && (
 										<Alert
-											severity={alertConfig.type}
+											severity={authError.type}
 											sx={{ mb: 2, borderRadius: 2.5 }}
 										>
-											{alertConfig.message}
+											{authError.message}
 										</Alert>
 									)}
 

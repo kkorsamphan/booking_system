@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -14,9 +13,9 @@ import Paper from '@mui/material/Paper';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import * as UserService from '../services/user';
+import useAuth from '../context/auth/useAuth';
 
-import { FormInput } from '../components/FormInput';
+import { FormInput } from '../components/Form';
 import { GlobalLayout } from '../components/Layouts';
 
 const LoginValidationSchema = Yup.object().shape({
@@ -27,14 +26,9 @@ const LoginValidationSchema = Yup.object().shape({
 });
 
 const LoginPage = (props) => {
-	const navigate = useNavigate();
+	const { login, authError } = useAuth();
 
 	const [showPassword, setShowPassword] = useState(false);
-	const [alertConfig, setAlertConfig] = useState({
-		show: false,
-		type: '',
-		message: ''
-	});
 
 	const handleClickShowPassword = () => {
 		setShowPassword(!showPassword);
@@ -55,24 +49,9 @@ const LoginPage = (props) => {
 						validateOnChange={false}
 						validateOnBlur={false}
 						validationSchema={LoginValidationSchema}
-						onSubmit={async (values, { setSubmitting }) => {
+						onSubmit={(values, { setSubmitting }) => {
 							setSubmitting(false);
-							const response = await UserService.login(values);
-							if (response && response.status === 200) {
-								setAlertConfig({
-									show: false,
-									type: '',
-									message: ''
-								});
-								navigate('/make_booking');
-							} else {
-								setAlertConfig({
-									show: true,
-									type: 'error',
-									message:
-										'Incorrect username or password. Please try again.'
-								});
-							}
+							login(values);
 						}}
 					>
 						{({
@@ -92,12 +71,12 @@ const LoginPage = (props) => {
 										minHeight: 380
 									}}
 								>
-									{alertConfig.show && (
+									{authError.show && (
 										<Alert
-											severity={alertConfig.type}
+											severity={authError.type}
 											sx={{ mb: 2, borderRadius: 2.5 }}
 										>
-											{alertConfig.message}
+											{authError.message}
 										</Alert>
 									)}
 
