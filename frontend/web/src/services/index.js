@@ -4,14 +4,16 @@ const request = (url, method, payload) => {
 	const myHeaders = new Headers();
 	myHeaders.append('Content-Type', 'application/json');
 
-	const body = JSON.stringify(payload);
-
 	const requestOptions = {
 		method: method,
 		headers: myHeaders,
-		body: body,
 		redirect: 'follow'
 	};
+
+	if (payload) {
+		const body = JSON.stringify(payload);
+		requestOptions.body = body;
+	}
 
 	return fetch(API_URL + url, requestOptions)
 		.then(async (response) => {

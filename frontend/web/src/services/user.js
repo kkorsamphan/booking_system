@@ -8,4 +8,8 @@ const login = (payload) => {
 	return request('/login', 'POST', payload);
 };
 
-export { register, login };
+const bookRoom = (userId, payload) => {
+	return request(`/users/${userId}/bookings`, 'POST', payload);
+};
+
+export { register, login, bookRoom };

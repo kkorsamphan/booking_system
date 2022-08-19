@@ -79,6 +79,14 @@ const theme = createTheme({
           }
         }
       ]
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#000000',
+          fontSize: 16
+        }
+      }
     }
   }
 });

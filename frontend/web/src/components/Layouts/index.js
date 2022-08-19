@@ -1,3 +1,4 @@
+import AppLayout from './AppLayout';
 import GlobalLayout from './GlobalLayout';
 
-export { GlobalLayout };
+export { AppLayout, GlobalLayout };
