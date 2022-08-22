@@ -3,7 +3,7 @@ package com.paloit.training.sp01.controller;
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
 import com.paloit.training.sp01.model.User;
-import com.paloit.training.sp01.model.request.CreateRoomPayload;
+import com.paloit.training.sp01.model.request.CreateRoomRequest;
 import com.paloit.training.sp01.repository.BookingRepository;
 import com.paloit.training.sp01.repository.RoomRepository;
 import com.paloit.training.sp01.repository.UserRepository;
@@ -37,10 +37,7 @@ public class RoomControllerTest {
     BookingRepository bookingRepo;
     @LocalServerPort
     private int port;
-    private Room testRoom1;
-    private Room testRoom2;
-    private Room testRoom3;
-    private User testUser;
+    private Room testRoom;
     private Booking testBooking;
 
     @BeforeAll
@@ -56,25 +53,30 @@ public class RoomControllerTest {
         user.setPassword("password");
         user.setFirstName("Test");
         user.setLastName("User");
-        testUser = userRepo.save(user);
+        userRepo.save(user);
 
         Room room1 = new Room();
         room1.setSize(5);
-        testRoom1 = roomRepo.save(room1);
+        room1.setName("A001");
+        testRoom = roomRepo.save(room1);
 
         Room room2 = new Room();
         room2.setSize(15);
-        testRoom2 = roomRepo.save(room2);
+        room2.setName("A002");
+        roomRepo.save(room2);
 
         Room room3 = new Room();
         room3.setSize(20);
-        testRoom3 = roomRepo.save(room3);
+        room3.setName("A003");
+        roomRepo.save(room3);
 
         Booking booking = new Booking();
-        booking.setUser(testUser);
-        booking.setRoom(testRoom1);
+        booking.setUser(user);
+        booking.setRoom(testRoom);
         booking.setStartTime(Instant.parse("2022-08-08T13:00:00Z"));
         booking.setEndTime(Instant.parse("2022-08-08T14:00:00Z"));
+        booking.setStatus("reserved");
+        booking.setBookingNumber("BA00001");
         testBooking = bookingRepo.save(booking);
     }
 
@@ -104,7 +106,7 @@ public class RoomControllerTest {
 
     @Test
     public void createRoom_ReturnedSuccessfully_200() {
-        CreateRoomPayload newRoom = new CreateRoomPayload();
+        CreateRoomRequest newRoom = new CreateRoomRequest();
         newRoom.setSize(10);
 
         given().log().all()
@@ -125,7 +127,7 @@ public class RoomControllerTest {
         given().log().all()
                 .with()
                 .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .when().get("api/rooms/{roomId}/bookings", testRoom1.getRoomId())
+                .when().get("api/rooms/{roomId}/bookings", testRoom.getRoomId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .and()

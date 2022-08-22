@@ -1,22 +1,23 @@
 package com.paloit.training.sp01.controller;
 
+import com.paloit.training.sp01.exception.BookingAlreadyExistsException;
+import com.paloit.training.sp01.exception.RoomNotFoundException;
+import com.paloit.training.sp01.exception.UserNotFoundException;
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
 import com.paloit.training.sp01.model.User;
-import com.paloit.training.sp01.model.request.CreateUserBookingPayload;
-import com.paloit.training.sp01.model.request.CreateUserPayload;
-import com.paloit.training.sp01.model.request.LoginUserPayload;
-import com.paloit.training.sp01.repository.BookingRepository;
-import com.paloit.training.sp01.repository.RoomRepository;
-import com.paloit.training.sp01.repository.UserRepository;
+import com.paloit.training.sp01.model.request.CreateUserBookingRequest;
+import com.paloit.training.sp01.model.request.UpdateUserBookingRequest;
+import com.paloit.training.sp01.service.BookingService;
+import com.paloit.training.sp01.service.RoomService;
+import com.paloit.training.sp01.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin
@@ -24,109 +25,65 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final BookingRepository bookingRepository;
-    private final RoomRepository roomRepository;
+    private final UserService userService;
+    private final RoomService roomService;
+    private final BookingService bookingService;
 
     public UserController(
-            UserRepository userRepository,
-            BookingRepository bookingRepository,
-            RoomRepository roomRepository
+            UserService userService,
+            RoomService roomService,
+            BookingService bookingService
     ) {
-        this.userRepository = userRepository;
-        this.bookingRepository = bookingRepository;
-        this.roomRepository = roomRepository;
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody LoginUserPayload payload) {
-        Optional<User> userOpt = userRepository.findByEmail(payload.getEmail());
-        if (userOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        User user = userOpt.get();
-        Boolean validateLogin = user.getPassword().equals(payload.getPassword());
-        if (!validateLogin) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        return ResponseEntity.ok(user);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody CreateUserPayload user) {
-
-        Optional<User> userOpt = userRepository.findByEmail(user.getEmail());
-        if (userOpt.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User newUser = new User();
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(user.getPassword());
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-
-        userRepository.save(newUser);
-
-        return ResponseEntity.ok(newUser);
+        this.userService = userService;
+        this.roomService = roomService;
+        this.bookingService = bookingService;
     }
 
     @GetMapping("/users/{userId}/bookings")
     public ResponseEntity<List<Booking>> getUserBookingById(@PathVariable UUID userId) {
-        List<Booking> result = new ArrayList<>();
+        try {
+            List<Booking> result = userService.getUserBookings(userId);
+            return ResponseEntity.ok(result);
 
-        Optional<User> userOpt = userRepository.findById(userId);
-
-        if (userOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (UserNotFoundException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found.", exc);
         }
-
-        userOpt.ifPresent(user -> {
-            result.addAll(user.getBookings());
-        });
-
-        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/users/{userId}/bookings")
     public ResponseEntity<Booking> createUserBooking(
             @PathVariable UUID userId,
-            @RequestBody CreateUserBookingPayload bookingRequest
+            @RequestBody CreateUserBookingRequest request
     ) {
-        var bookingStartTime = Instant.parse(bookingRequest.getStartTime());
-        var bookingEndTime = Instant.parse(bookingRequest.getEndTime());
+        try {
+            var bookingStartTime = Instant.parse(request.getStartTime());
+            var bookingEndTime = Instant.parse(request.getEndTime());
 
-        Booking newBooking = new Booking();
-        newBooking.setStartTime(bookingStartTime);
-        newBooking.setEndTime(bookingEndTime);
+            User user = userService.getUserById(userId);
+            Room room = roomService.getRoomById(request.getRoomId());
+            bookingService.CheckExistedBookingsByRoomAndTime(
+                    room.getRoomId(),
+                    bookingStartTime,
+                    bookingEndTime);
 
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            Booking newBooking = bookingService.createBooking(
+                    user,
+                    room,
+                    bookingStartTime,
+                    bookingEndTime);
+            return ResponseEntity.ok(newBooking);
+
+        } catch (UserNotFoundException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found.", exc);
+        } catch (RoomNotFoundException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Room not found.", exc);
+        } catch (BookingAlreadyExistsException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "The requested room and time has been booked.", exc);
         }
-        userOpt.ifPresent(user -> {
-            newBooking.setUser(user);
-        });
-
-        Optional<Room> roomOpt = roomRepository.findById(bookingRequest.getRoomId());
-        if (roomOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        var roomBookingCount = bookingRepository.countBookingsByRoomId(bookingRequest.getRoomId(), bookingStartTime, bookingEndTime);
-        if (roomBookingCount > 0) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        roomOpt.ifPresent(room -> {
-            newBooking.setRoom(room);
-        });
-
-        bookingRepository.save(newBooking);
-
-        return ResponseEntity.ok(newBooking);
     }
 }
 

@@ -3,9 +3,7 @@ package com.paloit.training.sp01.controller;
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
 import com.paloit.training.sp01.model.User;
-import com.paloit.training.sp01.model.request.CreateUserBookingPayload;
-import com.paloit.training.sp01.model.request.CreateUserPayload;
-import com.paloit.training.sp01.model.request.LoginUserPayload;
+import com.paloit.training.sp01.model.request.CreateUserBookingRequest;
 import com.paloit.training.sp01.repository.BookingRepository;
 import com.paloit.training.sp01.repository.RoomRepository;
 import com.paloit.training.sp01.repository.UserRepository;
@@ -63,6 +61,7 @@ public class UserControllerTest {
 
         Room room = new Room();
         room.setSize(15);
+        room.setName("A001");
         testRoom = roomRepo.save(room);
 
         Booking booking = new Booking();
@@ -70,6 +69,8 @@ public class UserControllerTest {
         booking.setRoom(testRoom);
         booking.setStartTime(Instant.parse("2022-08-08T13:00:00Z"));
         booking.setEndTime(Instant.parse("2022-08-08T14:00:00Z"));
+        booking.setStatus("reserved");
+        booking.setBookingNumber("BA00001");
         testBooking = bookingRepo.save(booking);
     }
 
@@ -79,99 +80,6 @@ public class UserControllerTest {
         bookingRepo.deleteAll();
         roomRepo.deleteAll();
         userRepo.deleteAll();
-    }
-
-    @Test
-    public void loginUser_ReturnedSuccessfully_200() {
-        LoginUserPayload payload = new LoginUserPayload();
-        payload.setEmail("xxx@example.com");
-        payload.setPassword("password");
-
-        given().log().all()
-                .with()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(payload)
-                .when()
-                .post("/api/login")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    public void loginUser_UserNotExists_ReturnedSuccessfully_401() {
-        LoginUserPayload payload = new LoginUserPayload();
-        payload.setEmail("newuser@example.com");
-        payload.setPassword("password");
-
-        given().log().all()
-                .with()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(payload)
-                .when()
-                .post("/api/login")
-                .then()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @Test
-    public void loginUser_IncorrectPassword_ReturnedSuccessfully_401() {
-        LoginUserPayload payload = new LoginUserPayload();
-        payload.setEmail("xxx@example.com");
-        payload.setPassword("not_password");
-
-        given().log().all()
-                .with()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(payload)
-                .when()
-                .post("/api/login")
-                .then()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @Test
-    public void createUser_ReturnedSuccessfully_200() {
-        CreateUserPayload newUser = new CreateUserPayload();
-        newUser.setFirstName("Kunlanit");
-        newUser.setLastName("Korsamphan");
-        newUser.setEmail("iamoyua@gmail.com");
-        newUser.setPassword("password");
-
-        given().log().all()
-                .with()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(newUser)
-                .when()
-                .post("/api/register")
-                .then()
-                .statusCode(HttpStatus.OK.value());
-
-        var userCount = userRepo.count();
-        assertEquals(2, userCount);
-    }
-
-    @Test
-    public void createUser_EmailExists_ReturnedSuccessfully_400() {
-        CreateUserPayload newUser = new CreateUserPayload();
-        newUser.setFirstName("Jane");
-        newUser.setLastName("Doe");
-        newUser.setEmail("xxx@example.com");
-        newUser.setPassword("password");
-
-        given().log().all()
-                .with()
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .body(newUser)
-                .when()
-                .post("/api/register")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
@@ -205,7 +113,7 @@ public class UserControllerTest {
 
     @Test
     public void createUserBooking_ReturnedSuccessfully_200() {
-        CreateUserBookingPayload newBooking = new CreateUserBookingPayload();
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(testRoom.getRoomId());
         newBooking.setStartTime("2022-08-08T16:00:00Z");
         newBooking.setEndTime("2022-08-08T17:00:00Z");
@@ -225,7 +133,7 @@ public class UserControllerTest {
 
     @Test
     public void createUserBooking_UserNotExists_ReturnedSuccessfully_404() {
-        CreateUserBookingPayload newBooking = new CreateUserBookingPayload();
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(testRoom.getRoomId());
         newBooking.setStartTime("2022-08-08T16:00:00Z");
         newBooking.setEndTime("2022-08-08T17:00:00Z");
@@ -242,7 +150,7 @@ public class UserControllerTest {
 
     @Test
     public void createUserBooking_RoomNotExists_ReturnedSuccessfully_404() {
-        CreateUserBookingPayload newBooking = new CreateUserBookingPayload();
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(UUID.randomUUID());
         newBooking.setStartTime("2022-08-08T16:00:00Z");
         newBooking.setEndTime("2022-08-08T17:00:00Z");
@@ -253,12 +161,12 @@ public class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
                 .when()
                 .post("/api/users/{userId}/bookings", testUser.getUserId())
-                .then().assertThat().statusCode(HttpStatus.NOT_FOUND.value());
+                .then().assertThat().statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     public void createUserBooking_BookingOverlapped_ReturnedSuccessfully_400() {
-        CreateUserBookingPayload newBooking = new CreateUserBookingPayload();
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(testRoom.getRoomId());
         newBooking.setStartTime("2022-08-08T13:00:00Z");
         newBooking.setEndTime("2022-08-08T14:00:00Z");

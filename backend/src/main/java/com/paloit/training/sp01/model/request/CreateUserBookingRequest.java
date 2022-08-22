@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class CreateUserBookingPayload {
+public class CreateUserBookingRequest {
     private UUID roomId;
     private String startTime;
     private String endTime;

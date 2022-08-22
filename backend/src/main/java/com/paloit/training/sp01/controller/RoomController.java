@@ -1,16 +1,18 @@
 package com.paloit.training.sp01.controller;
 
+import com.paloit.training.sp01.exception.RoomNotFoundException;
 import com.paloit.training.sp01.model.Booking;
 import com.paloit.training.sp01.model.Room;
-import com.paloit.training.sp01.repository.RoomRepository;
+import com.paloit.training.sp01.model.request.CreateRoomRequest;
+import com.paloit.training.sp01.service.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin
@@ -18,10 +20,10 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class RoomController {
 
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
 
-    public RoomController(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
     }
 
     @GetMapping("/rooms")
@@ -31,33 +33,26 @@ public class RoomController {
             @RequestParam String endTime
     ) {
 
-        var response = new ArrayList<Room>();
-        roomRepository.findAvailableRooms(roomSize, Instant.parse(startTime), Instant.parse(endTime))
-                .forEach(room -> response.add(room));
-
+        var response = roomService.getAvailableRooms(roomSize, Instant.parse(startTime), Instant.parse(endTime));
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/rooms")
-    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
+    public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest room) {
 
-        Room newRoom = roomRepository.save(room);
-
+        Room newRoom = roomService.createRoom(room);
         return ResponseEntity.ok(newRoom);
     }
 
     @GetMapping("/rooms/{roomId}/bookings")
     public ResponseEntity<List<Booking>> getRoomBookingsById(@PathVariable UUID roomId) {
-        List<Booking> result = new ArrayList<>();
+        try {
+            List<Booking> result = roomService.getRoomBookings(roomId);
+            return ResponseEntity.ok(result);
 
-        Optional<Room> roomOpt = roomRepository.findById(roomId);
-        if (roomOpt.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (RoomNotFoundException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Room not found.", exc);
         }
-        roomOpt.ifPresent(room -> {
-            result.addAll(room.getBookings());
-        });
-
-        return ResponseEntity.ok(result);
     }
 }
