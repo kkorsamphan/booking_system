@@ -17,15 +17,16 @@ const request = (url, method, payload) => {
 
 	return fetch(API_URL + url, requestOptions)
 		.then(async (response) => {
+			const data = await response.json();
 			if (response.status === 200) {
-				const data = await response.json();
 				return {
 					status: 200,
 					data
 				};
 			} else {
 				return {
-					status: response.status
+					status: response.status,
+					error: data.message
 				};
 			}
 		})

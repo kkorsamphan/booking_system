@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import AuthContext from './AuthContext';
 
-import * as UserService from '../../services/user';
+import * as AuthService from '../../services/auth';
 
 const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
+    const [initialLoad, setInitialLoad] = useState(false);
     const [userId, setUserId] = useState(undefined);
     const [loading, setLoading] = useState(false);
     const [authError, setAuthError] = useState({
@@ -21,12 +22,14 @@ const AuthProvider = ({ children }) => {
         if (userId) {
             setUserId(userId);
         }
+
+        setInitialLoad(true);
     }, []);
 
     const login = async (payload) => {
         setLoading(true);
 
-        const response = await UserService.login(payload);
+        const response = await AuthService.login(payload);
         if (response && response.status === 200) {
             setAuthError({
                 show: false,
@@ -51,7 +54,7 @@ const AuthProvider = ({ children }) => {
     const signUp = async (payload) => {
         setLoading(true);
 
-        const response = await UserService.register(payload);
+        const response = await AuthService.signup(payload);
         if (response && response.status === 200) {
             setAuthError({
                 show: false,
@@ -82,6 +85,7 @@ const AuthProvider = ({ children }) => {
     // Make the provider update only when it should
     const memoValue = useMemo(
         () => ({
+            initialLoad,
             userId,
             loading,
             authError,
@@ -94,7 +98,7 @@ const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={memoValue}>
-            {children}
+            {initialLoad && children}
         </AuthContext.Provider>
     );
 };

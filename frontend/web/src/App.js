@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import theme from './styles/theme';
 
 import AuthProvider from './context/auth/AuthProvider';
+import RequireAuth from './context/auth/RequireAuth';
 
 import LandingPage from './pages/LandingPage';
 import SignUpPage from './pages/SignUpPage';
@@ -23,9 +24,30 @@ const App = () => {
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/sign_up" element={<SignUpPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/booking" element={<BookingPage />} />
-            <Route path="/booking_done" element={<BookingDonePage />} />
-            <Route path="/my_bookings" element={<MyBookingPage />} />
+            <Route
+              path="/booking"
+              element={
+                <RequireAuth>
+                  <BookingPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/booking_done"
+              element={
+                <RequireAuth>
+                  <BookingDonePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/my_bookings"
+              element={
+                <RequireAuth>
+                  <MyBookingPage />
+                </RequireAuth>
+              }
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
