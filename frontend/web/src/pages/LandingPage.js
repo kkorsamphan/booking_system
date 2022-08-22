@@ -15,9 +15,14 @@ const LandingPage = (props) => {
 		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item sm={12} md={6}>
-					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
-						<h1>Meeting</h1>
-						<h1>Room Booking</h1>
+					<Box
+						sx={{
+							fontWeight: 700,
+							color: '#FFFFFF',
+							whiteSpace: 'pre'
+						}}
+					>
+						<h1>{'Meeting\nRoom Booking'}</h1>
 					</Box>
 				</Grid>
 				<Grid item sm={12} md={6}>
@@ -45,7 +50,7 @@ const LandingPage = (props) => {
 						<Grid container spacing={2}>
 							<Grid item xs={12} sm={12} md={6}>
 								<Button
-									id="landing-page-login-button"
+									data-testid="landing-page-login-button"
 									disableElevation
 									fullWidth
 									variant="contained"
@@ -60,7 +65,7 @@ const LandingPage = (props) => {
 							</Grid>
 							<Grid item xs={12} sm={12} md={6}>
 								<Button
-									id="landing-page-sign-up-button"
+									data-testid="landing-page-sign-up-button"
 									disableElevation
 									fullWidth
 									variant="outlined"

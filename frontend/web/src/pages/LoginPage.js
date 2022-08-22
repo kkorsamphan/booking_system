@@ -38,9 +38,14 @@ const LoginPage = (props) => {
 		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item md={6}>
-					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
-						<h1>Hello !</h1>
-						<h1>Welcome Back</h1>
+					<Box
+						sx={{
+							fontWeight: 700,
+							color: '#FFFFFF',
+							whiteSpace: 'pre'
+						}}
+					>
+						<h1>{'Hello !\nWelcome Back'}</h1>
 					</Box>
 				</Grid>
 				<Grid item md={6}>
@@ -98,7 +103,8 @@ const LoginPage = (props) => {
 									<Box sx={{ flex: 1 }}>
 										<FormInput
 											inputProps={{
-												id: 'login-form-email-input'
+												'data-testid':
+													'login-form-email-input'
 											}}
 											fullWidth
 											label="Email"
@@ -107,7 +113,8 @@ const LoginPage = (props) => {
 										/>
 										<FormInput
 											inputProps={{
-												id: 'login-form-password-input'
+												'data-testid':
+													'login-form-password-input'
 											}}
 											fullWidth
 											label="Password"
@@ -138,7 +145,7 @@ const LoginPage = (props) => {
 										}}
 									>
 										<Button
-											id="login-form-login-button"
+											data-testid="login-form-login-button"
 											disableElevation
 											variant="contained"
 											color="primary"

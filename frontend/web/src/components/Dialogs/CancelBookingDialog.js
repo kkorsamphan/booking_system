@@ -11,13 +11,18 @@ const CancelBookingDialog = ({
 	onCancel
 }) => {
 	return (
-		<Dialog fullWidth open={openDialog} onClose={onCancel}>
+		<Dialog
+			fullWidth
+			open={openDialog}
+			onClose={onCancel}
+			data-testid="cancel-booking-dialog"
+		>
 			<Box sx={{ p: 4 }}>
 				<Box sx={{ fontWeight: 700, fontSize: 28 }}>
 					{'Cancel Booking'}
 				</Box>
 				<Box sx={{ mt: 4, mb: 1 }}>
-					<Box>{`Booking no. ${bookingNo}`}</Box>
+					<Box data-testid="cancel-booking-dialog-booking-number">{`Booking no. ${bookingNo}`}</Box>
 					<Box sx={{ my: 1 }}>
 						{
 							'If you cancel this booking, you will lose your reservation.'
@@ -27,6 +32,7 @@ const CancelBookingDialog = ({
 				</Box>
 				<Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
 					<Button
+						data-testid="cancel-booking-dialog-cancel-button"
 						disableElevation
 						fullWidth
 						variant="outlined"
@@ -37,6 +43,7 @@ const CancelBookingDialog = ({
 						No, keep my booking
 					</Button>
 					<Button
+						data-testid="cancel-booking-dialog-confirm-button"
 						disableElevation
 						fullWidth
 						variant="contained"

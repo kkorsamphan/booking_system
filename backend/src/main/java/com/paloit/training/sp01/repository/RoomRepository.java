@@ -13,16 +13,15 @@ import java.util.UUID;
 @Repository
 public interface RoomRepository extends PagingAndSortingRepository<Room, UUID> {
     @Query("" +
-            "SELECT r " +
+            "SELECT DISTINCT r " +
             "FROM Room r " +
             "LEFT JOIN r.bookings bk " +
             "WHERE r.size >= :roomSize " +
-            "AND ( bk IS NULL " +
-                "OR NOT ( " +
-                    "bk.startTime < :endTime " +
-                    "AND bk.endTime > :startTime " +
-                    "AND bk.status IN ('reserved', 'completed')" +
-                ") " +
+            "AND ( " +
+                "bk IS NULL " +
+                "OR bk.startTime >= :endTime " +
+                "OR bk.endTime <= :startTime " +
+                "OR bk.status NOT IN ('reserved', 'completed')" +
             ")"
     )
     List<Room> findAvailableRooms(

@@ -20,13 +20,20 @@ const RoomCard = ({ name, size, disabledAction, onChoosingRoom }) => {
 						disabledAction ? '#000000' : theme.palette.primary.main
 				}
 			}}
+			data-testid="room-card"
 		>
 			<CardActionArea disabled={disabledAction} onClick={onChoosingRoom}>
 				<CardContent sx={{ display: 'flex', py: 4, px: 2 }}>
-					<Box sx={{ flex: 1, fontSize: 18, fontWeight: 700 }}>
+					<Box
+						sx={{ flex: 1, fontSize: 18, fontWeight: 700 }}
+						data-testid="room-card-room-name"
+					>
 						Room {name}
 					</Box>
-					<Box sx={{ flex: 1, fontSize: 18, textAlign: 'right' }}>
+					<Box
+						sx={{ flex: 1, fontSize: 18, textAlign: 'right' }}
+						data-testid="room-card-room-size"
+					>
 						{size} Guests max
 					</Box>
 				</CardContent>

@@ -1,13 +1,14 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 import { GlobalLayout } from '../components/Layouts';
 
-const BokingDone = (props) => {
+const BookingDonePage = (props) => {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	return (
 		<GlobalLayout>
@@ -25,6 +26,7 @@ const BokingDone = (props) => {
 					{'Booking\nSuccessful'}
 				</Box>
 				<Box
+					data-testid="booking-done-page-booking-number"
 					sx={{
 						color: '#FFFFFF',
 						fontSize: 18,
@@ -32,10 +34,12 @@ const BokingDone = (props) => {
 						mt: 3
 					}}
 				>
-					Your booking No. is BA09100
+					<span>Your booking No. is </span>
+					<span>{location.state.bookingNo}</span>
 				</Box>
 				<Box sx={{ mt: 6 }}>
 					<Button
+						data-testid="booking-done-page-booking-history-button"
 						fullWidth
 						variant="contained"
 						color="primary"
@@ -53,4 +57,4 @@ const BokingDone = (props) => {
 	);
 };
 
-export default BokingDone;
+export default BookingDonePage;

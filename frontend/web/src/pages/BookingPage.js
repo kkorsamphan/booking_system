@@ -65,7 +65,11 @@ const BookingPage = (props) => {
 
 		const response = await UserService.bookRoom(userId, payload);
 		if (response && response.status === 200) {
-			navigate('/booking_done');
+			navigate('/booking_done', {
+				state: {
+					bookingNo: response.data.bookingNumber
+				}
+			});
 		} else {
 		}
 
@@ -81,6 +85,7 @@ const BookingPage = (props) => {
 		<AppLayout title={pageTitle}>
 			<Box sx={{ textAlign: 'right', mb: 4 }}>
 				<LinkButton
+					data-testid="booking-page-my-bookings-button"
 					icon={<EventAvailableIcon />}
 					label="My Bookings"
 					onClick={() => {
@@ -96,14 +101,17 @@ const BookingPage = (props) => {
 			)}
 			{showRooms && rooms.length > 0 && (
 				<Box sx={{ py: 2 }}>
-					<Box sx={{ fontWeight: 700, mb: 2 }}>Available Room</Box>
-					<Grid container spacing={2}>
+					<Box sx={{ fontWeight: 700, mb: 2 }}>Available Rooms</Box>
+					<Grid
+						container
+						spacing={2}
+						data-testid="booking-page-room-available-room-list"
+					>
 						{rooms.map((room) => (
 							<Grid key={room.roomId} item md={4}>
 								<RoomCard
 									name={room.name}
 									size={room.size}
-									roomId={room.roomId}
 									onChoosingRoom={() => {
 										setSelectedRoom(room);
 										setOpenBookingDialog(true);

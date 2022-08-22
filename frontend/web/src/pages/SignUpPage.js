@@ -38,9 +38,14 @@ const SignUpPage = (props) => {
 		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item sm={12} md={6}>
-					<Box sx={{ fontWeight: 700, color: '#FFFFFF' }}>
-						<h1>Create</h1>
-						<h1>New Account</h1>
+					<Box
+						sx={{
+							fontWeight: 700,
+							color: '#FFFFFF',
+							whiteSpace: 'pre'
+						}}
+					>
+						<h1>{'Create\nNew Account'}</h1>
 					</Box>
 				</Grid>
 				<Grid item sm={12} md={6}>
@@ -97,7 +102,8 @@ const SignUpPage = (props) => {
 									<Box>
 										<FormInput
 											inputProps={{
-												id: 'sign-up-form-first-name-input'
+												'data-testid':
+													'sign-up-form-first-name-input'
 											}}
 											label="First Name"
 											placeholder="First Name"
@@ -106,7 +112,8 @@ const SignUpPage = (props) => {
 										/>
 										<FormInput
 											inputProps={{
-												id: 'sign-up-form-last-name-input'
+												'data-testid':
+													'sign-up-form-last-name-input'
 											}}
 											label="Last Name"
 											placeholder="Last Name"
@@ -115,7 +122,8 @@ const SignUpPage = (props) => {
 										/>
 										<FormInput
 											inputProps={{
-												id: 'sign-up-form-email-input'
+												'data-testid':
+													'sign-up-form-email-input'
 											}}
 											fullWidth
 											label="Email"
@@ -124,7 +132,8 @@ const SignUpPage = (props) => {
 										/>
 										<FormInput
 											inputProps={{
-												id: 'sign-up-form-password-input'
+												'data-testid':
+													'sign-up-form-password-input'
 											}}
 											fullWidth
 											label="Password"
@@ -155,7 +164,7 @@ const SignUpPage = (props) => {
 										}}
 									>
 										<Button
-											id="sign-up-form-create-new-account-button"
+											data-testid="sign-up-form-create-new-account-button"
 											disableElevation
 											variant="contained"
 											color="primary"

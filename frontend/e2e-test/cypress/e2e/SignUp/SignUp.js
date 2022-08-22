@@ -14,24 +14,23 @@ And('I see a sign up button', () => {
 });
 
 When('I click on a sign up button', () => {
-	cy.get(`[id=landing-page-sign-up-button]`).click();
+	cy.get(`[data-testid=landing-page-sign-up-button]`).click();
 });
 
 Then('I see a sign up page', () => {
-	cy.contains('Create');
-	cy.contains('New Account');
+	cy.contains('Create New Account');
 });
 
 And('I fill in the email field with value {string}', (email) => {
-	cy.get(`[id=sign-up-form-email-input]`).type(email);
+	cy.get(`[data-testid=sign-up-form-email-input]`).type(email);
 });
 
 And('I fill in the password field with value {string}', (password) => {
-	cy.get(`[id=sign-up-form-password-input]`).type(password);
+	cy.get(`[data-testid=sign-up-form-password-input]`).type(password);
 });
 
 When('I click a create new account button', () => {
-	cy.get(`[id=sign-up-form-create-new-account-button]`).click();
+	cy.get(`[data-testid=sign-up-form-create-new-account-button]`).click();
 });
 
 Then('I should see a make booking page', (text) => {

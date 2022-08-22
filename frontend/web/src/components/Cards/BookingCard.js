@@ -17,6 +17,7 @@ const BookingCard = ({
 }) => {
 	return (
 		<Card
+			data-testid="booking-card"
 			variant="outlined"
 			sx={{
 				border: '1px solid #000000',
@@ -24,20 +25,44 @@ const BookingCard = ({
 			}}
 		>
 			<CardContent sx={{ p: 3, fontSize: 16 }}>
-				<Box sx={{ fontWeight: 700 }}>Booking No. {bookingNo}</Box>
+				<Box
+					data-testid="booking-card-booking-number"
+					sx={{ fontWeight: 700 }}
+				>
+					Booking No. {bookingNo}
+				</Box>
 				<Box sx={{ display: 'flex', my: 1 }}>
-					<Box sx={{ flex: 1, maxWidth: 120 }}>Room {roomName}</Box>
-					<Box sx={{ flex: 1 }}>{roomSize} Guests max</Box>
+					<Box
+						data-testid="booking-card-booking-room-name"
+						sx={{ flex: 1, maxWidth: 120 }}
+					>
+						Room {roomName}
+					</Box>
+					<Box
+						data-testid="booking-card-booking-room-size"
+						sx={{ flex: 1 }}
+					>
+						{roomSize} Guests max
+					</Box>
 				</Box>
 				<Box sx={{ display: 'flex' }}>
-					<Box sx={{ flex: 1, maxWidth: 120 }}>{bookingDate}</Box>
-					<Box sx={{ flex: 1 }}>
+					<Box
+						data-testid="booking-card-booking-date"
+						sx={{ flex: 1, maxWidth: 120 }}
+					>
+						{bookingDate}
+					</Box>
+					<Box
+						data-testid="booking-card-booking-time"
+						sx={{ flex: 1 }}
+					>
 						{bookingStartTime} - {bookingEndTime}
 					</Box>
 				</Box>
 				{onCancelBooking && (
 					<Box sx={{ px: 1, mt: 2 }}>
 						<Button
+							data-testid="booking-card-cancel-booking-button"
 							fullWidth
 							disableElevation
 							variant="contained"

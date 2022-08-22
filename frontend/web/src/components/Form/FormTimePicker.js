@@ -40,7 +40,6 @@ const createTimeRange = (date, minHour, maxHour) => {
 };
 
 const FormTimePicker = ({
-	inputId,
 	label,
 	placeholder,
 	fullWidth,
@@ -50,7 +49,9 @@ const FormTimePicker = ({
 	onChange,
 	date,
 	minHour,
-	maxHour
+	maxHour,
+	dateInputProps,
+	selectMenuProps
 }) => {
 	const times = createTimeRange(date, minHour, maxHour);
 	const minTime = moment(date).valueOf();
@@ -74,7 +75,9 @@ const FormTimePicker = ({
 					onChange={onChange}
 					input={
 						<CustomInput
-							id={inputId}
+							inputProps={{
+								...dateInputProps
+							}}
 							style={{ textAlign: 'center' }}
 							placeholder={placeholder}
 							onClick={() => {
@@ -84,7 +87,10 @@ const FormTimePicker = ({
 							}}
 						/>
 					}
-					MenuProps={{ disableEnforceFocus: true }}
+					MenuProps={{
+						...selectMenuProps,
+						disableEnforceFocus: true
+					}}
 				>
 					<MenuItem value="">
 						<span style={{ color: '#888888' }}>{placeholder}</span>

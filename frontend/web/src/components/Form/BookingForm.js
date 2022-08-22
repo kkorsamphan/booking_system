@@ -61,7 +61,7 @@ const BookingForm = ({ handleFindRoom }) => {
 				<Grid item md={3}>
 					<FormInput
 						inputProps={{
-							id: 'find-room-form-guest-number',
+							'data-testid': 'find-room-form-guest-number',
 							style: { textAlign: 'center' }
 						}}
 						fullWidth
@@ -73,7 +73,9 @@ const BookingForm = ({ handleFindRoom }) => {
 				</Grid>
 				<Grid item md={3}>
 					<FormDatePicker
-						inputId="find-room-form-date"
+						dateInputProps={{
+							'data-testid': 'find-room-form-date-input'
+						}}
 						fullWidth
 						label="Date"
 						placeholder="Select date"
@@ -92,7 +94,13 @@ const BookingForm = ({ handleFindRoom }) => {
 				</Grid>
 				<Grid item md={3}>
 					<FormTimePicker
-						inputId="find-room-form-start-time"
+						data-testid="find-room-form-start-time-select"
+						dateInputProps={{
+							'data-testid': 'find-room-form-start-time-input'
+						}}
+						selectMenuProps={{
+							'data-testid': 'find-room-form-start-time-dialog'
+						}}
 						fullWidth
 						label="Start Time"
 						placeholder="Select start time"
@@ -113,7 +121,13 @@ const BookingForm = ({ handleFindRoom }) => {
 				</Grid>
 				<Grid item md={3}>
 					<FormTimePicker
-						inputId="find-room-form-end-time"
+						data-testid="find-room-form-end-time-select"
+						dateInputProps={{
+							'data-testid': 'find-room-form-end-time-input'
+						}}
+						selectMenuProps={{
+							'data-testid': 'find-room-form-end-time-dialog'
+						}}
 						fullWidth
 						label="End Time"
 						placeholder="Select end time"
@@ -132,7 +146,7 @@ const BookingForm = ({ handleFindRoom }) => {
 				<Grid item md={9}></Grid>
 				<Grid item md={3}>
 					<Button
-						id="find-room-form-find-room-button"
+						data-testid="find-room-form-find-room-button"
 						fullWidth
 						disableElevation
 						variant="contained"

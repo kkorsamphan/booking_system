@@ -19,7 +19,7 @@ const BookingDialog = ({
 }) => {
 	return (
 		<Dialog fullWidth open={openDialog} onClose={onCancel}>
-			<Box sx={{ p: 4 }}>
+			<Box sx={{ p: 4 }} data-testid="booking-dialog">
 				<Box sx={{ fontWeight: 700, fontSize: 28 }}>
 					{'Booking Summary'}
 				</Box>
@@ -30,6 +30,7 @@ const BookingDialog = ({
 							labelStyle={{ color: '#000000', fontWeight: 700 }}
 							defaultValue={date}
 							inputProps={{
+								'data-testid': 'booking-dialog-summary-date',
 								style: { textAlign: 'center' }
 							}}
 						/>
@@ -41,6 +42,7 @@ const BookingDialog = ({
 							labelStyle={{ color: '#000000', fontWeight: 700 }}
 							defaultValue={`${startTime} - ${endTime}`}
 							inputProps={{
+								'data-testid': 'booking-dialog-summary-time',
 								style: { textAlign: 'center' }
 							}}
 						/>
@@ -53,6 +55,7 @@ const BookingDialog = ({
 				<RoomCard disabledAction name={roomName} size={roomSize} />
 				<Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
 					<Button
+						data-testid="booking-dialog-cancel-booking-button"
 						disableElevation
 						fullWidth
 						variant="outlined"
@@ -63,6 +66,7 @@ const BookingDialog = ({
 						Cancel
 					</Button>
 					<Button
+						data-testid="booking-dialog-confirm-booking-button"
 						disableElevation
 						fullWidth
 						variant="contained"

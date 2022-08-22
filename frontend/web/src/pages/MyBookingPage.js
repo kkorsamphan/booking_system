@@ -96,6 +96,7 @@ const MyBookingPage = (props) => {
 		<AppLayout title={'My Booking History'}>
 			<Box sx={{ textAlign: 'right', mb: 4 }}>
 				<LinkButton
+					data-testid="my-booking-page-make-booking-button"
 					icon={<EventIcon />}
 					label="Make New Booking"
 					onClick={() => {
@@ -107,7 +108,11 @@ const MyBookingPage = (props) => {
 			<Box sx={{ py: 2 }}>
 				<Box sx={{ fontWeight: 700, mb: 2 }}>Reserved</Box>
 				{reservedBookings.length > 0 ? (
-					<Grid container spacing={2}>
+					<Grid
+						container
+						spacing={2}
+						data-testid="my-booking-page-reserved-list"
+					>
 						{reservedBookings.map((booking) => (
 							<Grid key={booking.bookingId} item md={4}>
 								<BookingCard
@@ -138,7 +143,12 @@ const MyBookingPage = (props) => {
 				{cancelledBookings.length > 0 ? (
 					<Grid container spacing={2}>
 						{cancelledBookings.map((booking) => (
-							<Grid key={booking.bookingId} item md={4}>
+							<Grid
+								key={booking.bookingId}
+								item
+								md={4}
+								data-testid="my-booking-page-cancelled-list"
+							>
 								<BookingCard
 									roomName={booking.roomName}
 									roomSize={booking.roomSize}
@@ -161,7 +171,11 @@ const MyBookingPage = (props) => {
 			<Box sx={{ py: 2 }}>
 				<Box sx={{ fontWeight: 700, mb: 2 }}>Completed</Box>
 				{completedBookings.length > 0 ? (
-					<Grid container spacing={2}>
+					<Grid
+						container
+						spacing={2}
+						data-testid="my-booking-page-completed-list"
+					>
 						{completedBookings.map((booking) => (
 							<Grid key={booking.bookingId} item md={4}>
 								<BookingCard

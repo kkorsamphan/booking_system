@@ -7,12 +7,12 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import FormInput from './FormInput';
 
 const FormDatePicker = ({
-	inputId,
 	label,
 	placeholder,
 	open,
 	onTogglePicker,
 	value,
+	dateInputProps,
 	onChange
 }) => {
 	return (
@@ -29,7 +29,7 @@ const FormDatePicker = ({
 						label={label}
 						inputProps={{
 							...inputProps,
-							id: inputId,
+							...dateInputProps,
 							placeholder: placeholder,
 							readOnly: true,
 							style: { textAlign: 'center' }
@@ -41,7 +41,10 @@ const FormDatePicker = ({
 						}}
 					/>
 				)}
-				PopperProps={{ disablePortal: true }}
+				PopperProps={{
+					disablePortal: true,
+					'data-testid': 'form-date-picker'
+				}}
 			/>
 		</LocalizationProvider>
 	);
