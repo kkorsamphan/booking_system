@@ -17,7 +17,13 @@ public interface RoomRepository extends PagingAndSortingRepository<Room, UUID> {
             "FROM Room r " +
             "LEFT JOIN r.bookings bk " +
             "WHERE r.size >= :roomSize " +
-            "AND ( bk IS NULL OR NOT ( bk.startTime < :endTime AND bk.endTime > :startTime ) )"
+            "AND ( bk IS NULL " +
+                "OR NOT ( " +
+                    "bk.startTime < :endTime " +
+                    "AND bk.endTime > :startTime " +
+                    "AND bk.status IN ('reserved', 'completed')" +
+                ") " +
+            ")"
     )
     List<Room> findAvailableRooms(
             @Param("roomSize") Integer roomSize,

@@ -16,6 +16,7 @@ public interface BookingRepository extends PagingAndSortingRepository<Booking, U
             "SELECT COUNT(bk) " +
             "FROM Booking bk " +
             "WHERE bk.room.roomId = :roomId " +
+            "AND bk.status IN ('reserved', 'completed') " +
             "AND ( bk.startTime < :endTime AND bk.endTime > :startTime )"
     )
     Long countBookingsByRoomId(
