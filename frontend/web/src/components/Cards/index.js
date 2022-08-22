@@ -1,3 +1,4 @@
+import BookingCard from './BookingCard';
 import RoomCard from './RoomCard';
 
-export { RoomCard };
+export { BookingCard, RoomCard };

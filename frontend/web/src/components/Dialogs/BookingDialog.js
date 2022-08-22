@@ -13,16 +13,12 @@ const BookingDialog = ({
 	endTime,
 	roomName,
 	roomSize,
-	openBookingDialog,
-	onConfirmBookingDialog,
-	onCancelBookingDialog
+	openDialog,
+	onConfirm,
+	onCancel
 }) => {
 	return (
-		<Dialog
-			fullWidth
-			open={openBookingDialog}
-			onClose={onCancelBookingDialog}
-		>
+		<Dialog fullWidth open={openDialog} onClose={onCancel}>
 			<Box sx={{ p: 4 }}>
 				<Box sx={{ fontWeight: 700, fontSize: 28 }}>
 					{'Booking Summary'}
@@ -62,7 +58,7 @@ const BookingDialog = ({
 						variant="outlined"
 						color="primary"
 						size="large"
-						onClick={onCancelBookingDialog}
+						onClick={onCancel}
 					>
 						Cancel
 					</Button>
@@ -72,7 +68,7 @@ const BookingDialog = ({
 						variant="contained"
 						color="primary"
 						size="large"
-						onClick={onConfirmBookingDialog}
+						onClick={onConfirm}
 						sx={{ mt: 1 }}
 					>
 						Confirm Booking
