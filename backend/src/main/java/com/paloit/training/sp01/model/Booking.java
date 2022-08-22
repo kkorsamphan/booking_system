@@ -18,8 +18,9 @@ public class Booking {
     private UUID bookingId;
 
     private Instant startTime;
-
     private Instant endTime;
+    private String status;
+    private String bookingNumber;
 
     @JsonBackReference
     // KEPT IT FOR REFERENCE

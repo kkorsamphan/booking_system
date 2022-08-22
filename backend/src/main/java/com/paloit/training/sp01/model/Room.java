@@ -16,6 +16,7 @@ public class Room {
     @Column(name = "room_id")
     private UUID roomId;
 
+    private String name;
     private Integer size;
 
     // KEPT IT FOR REFERENCE
