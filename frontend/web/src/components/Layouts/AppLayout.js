@@ -17,7 +17,8 @@ const AppLayout = ({ title, children }) => {
 				height: '100vh',
 				display: 'flex',
 				flexDirection: 'column',
-				backgroundColor: '#FFFFFF'
+				backgroundColor: '#FFFFFF',
+				overflow: 'hidden'
 			}}
 		>
 			<Paper
@@ -57,7 +58,9 @@ const AppLayout = ({ title, children }) => {
 					{title}
 				</Box>
 			</Paper>
-			<Box sx={{ px: 16, py: 4 }}>{children}</Box>
+			<Box sx={{ height: 'auto', overflow: 'scroll' }}>
+				<Box sx={{ px: 16, py: 4 }}>{children}</Box>
+			</Box>
 		</Box>
 	);
 };

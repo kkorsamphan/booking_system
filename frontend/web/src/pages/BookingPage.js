@@ -101,6 +101,7 @@ const BookingPage = (props) => {
 						{rooms.map((room) => (
 							<Grid key={room.roomId} item md={4}>
 								<RoomCard
+									name={room.name}
 									size={room.size}
 									roomId={room.roomId}
 									onChoosingRoom={() => {
@@ -117,11 +118,11 @@ const BookingPage = (props) => {
 				date={selectedDate.dateFormat}
 				startTime={selectedDate.startTimeFormat}
 				endTime={selectedDate.endTimeFormat}
-				roomName={''}
+				roomName={selectedRoom.name}
 				roomSize={selectedRoom.size}
-				openBookingDialog={openBookingDialog}
-				onConfirmBookingDialog={handleConfirmBooking}
-				onCancelBookingDialog={handleCancelBooking}
+				openDialog={openBookingDialog}
+				onConfirm={handleConfirmBooking}
+				onCancel={handleCancelBooking}
 			/>
 		</AppLayout>
 	);

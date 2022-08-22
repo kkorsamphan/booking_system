@@ -24,7 +24,7 @@ const RoomCard = ({ name, size, disabledAction, onChoosingRoom }) => {
 			<CardActionArea disabled={disabledAction} onClick={onChoosingRoom}>
 				<CardContent sx={{ display: 'flex', py: 4, px: 2 }}>
 					<Box sx={{ flex: 1, fontSize: 18, fontWeight: 700 }}>
-						Room
+						Room {name}
 					</Box>
 					<Box sx={{ flex: 1, fontSize: 18, textAlign: 'right' }}>
 						{size} Guests max
