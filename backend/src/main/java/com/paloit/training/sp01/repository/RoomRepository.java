@@ -19,9 +19,11 @@ public interface RoomRepository extends PagingAndSortingRepository<Room, UUID> {
             "WHERE r.size >= :roomSize " +
             "AND ( " +
                 "bk IS NULL " +
-                "OR bk.startTime >= :endTime " +
-                "OR bk.endTime <= :startTime " +
-                "OR bk.status NOT IN ('reserved', 'completed')" +
+                "OR NOT (" +
+                    "( :startTime > bk.startTime OR :endTime > bk.startTime )" +
+                    "AND ( :startTime < bk.endTime OR :endTime < bk.endTime )" +
+                    "AND bk.status IN ('reserved', 'completed')" +
+                ")" +
             ")"
     )
     List<Room> findAvailableRooms(

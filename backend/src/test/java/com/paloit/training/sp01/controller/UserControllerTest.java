@@ -112,7 +112,28 @@ public class UserControllerTest {
     }
 
     @Test
-    public void createUserBooking_ReturnedSuccessfully_200() {
+    public void createUserBooking_BookBefore_ReturnedSuccessfully_200() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T11:00:00Z");
+        newBooking.setEndTime("2022-08-08T12:00:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(newBooking)
+                .when()
+                .post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        var bookingCount = bookingRepo.count();
+        assertEquals(2, bookingCount);
+    }
+
+    @Test
+    public void createUserBooking_BookAfter_ReturnedSuccessfully_200() {
         CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(testRoom.getRoomId());
         newBooking.setStartTime("2022-08-08T16:00:00Z");
@@ -125,10 +146,45 @@ public class UserControllerTest {
                 .body(newBooking)
                 .when()
                 .post("/api/users/{userId}/bookings", testUser.getUserId())
-                .then().statusCode(HttpStatus.OK.value());
+                .then()
+                .statusCode(HttpStatus.OK.value());
 
         var bookingCount = bookingRepo.count();
         assertEquals(2, bookingCount);
+    }
+
+    @Test
+    public void createUserBooking_BookingStartTimeOverlapWithEndTime_ReturnedSuccessfully_200() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T14:00:00Z");
+        newBooking.setEndTime("2022-08-08T15:00:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void createUserBooking_BookingEndTimeOverlapWithStartTime_ReturnedSuccessfully_200() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T12:00:00Z");
+        newBooking.setEndTime("2022-08-08T13:00:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -145,7 +201,8 @@ public class UserControllerTest {
                 .when()
                 .post("/api/users/{userId}/bookings", UUID.randomUUID())
                 .then()
-                .assertThat().statusCode(HttpStatus.NOT_FOUND.value());
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -161,15 +218,85 @@ public class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
                 .when()
                 .post("/api/users/{userId}/bookings", testUser.getUserId())
-                .then().assertThat().statusCode(HttpStatus.BAD_REQUEST.value());
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void createUserBooking_BookingOverlapped_ReturnedSuccessfully_400() {
+    public void createUserBooking_BookingSameTime_ReturnedSuccessfully_400() {
         CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
         newBooking.setRoomId(testRoom.getRoomId());
         newBooking.setStartTime("2022-08-08T13:00:00Z");
         newBooking.setEndTime("2022-08-08T14:00:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void createUserBooking_BookingTimeOverlap_ReturnedSuccessfully_400() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T12:00:00Z");
+        newBooking.setEndTime("2022-08-08T16:00:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void createUserBooking_BookingTimeOverlapWithin_ReturnedSuccessfully_400() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T13:30:00Z");
+        newBooking.setEndTime("2022-08-08T13:45:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void createUserBooking_BookingTimeOverlapStartTime_ReturnedSuccessfully_400() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T12:30:00Z");
+        newBooking.setEndTime("2022-08-08T13:30:00Z");
+
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE).body(newBooking)
+                .when().post("/api/users/{userId}/bookings", testUser.getUserId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void createUserBooking_BookingTimeOverlapEndTime_ReturnedSuccessfully_400() {
+        CreateUserBookingRequest newBooking = new CreateUserBookingRequest();
+        newBooking.setRoomId(testRoom.getRoomId());
+        newBooking.setStartTime("2022-08-08T13:30:00Z");
+        newBooking.setEndTime("2022-08-08T15:00:00Z");
 
         given().log().all()
                 .with()

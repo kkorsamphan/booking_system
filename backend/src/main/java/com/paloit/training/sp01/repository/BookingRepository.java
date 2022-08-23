@@ -17,8 +17,12 @@ public interface BookingRepository extends PagingAndSortingRepository<Booking, U
             "FROM Booking bk " +
             "WHERE bk.room.roomId = :roomId " +
             "AND bk.status IN ('reserved', 'completed') " +
-            "AND ( bk.startTime < :endTime AND bk.endTime > :startTime )"
+            "AND (" +
+                "( :startTime > bk.startTime OR :endTime > bk.startTime )  " +
+                "AND ( :startTime < bk.endTime OR :endTime < bk.endTime )" +
+            ")"
     )
+
     Long countBookingsByRoomId(
             @Param("roomId") UUID roomId,
             @Param("startTime") Instant startTime,
