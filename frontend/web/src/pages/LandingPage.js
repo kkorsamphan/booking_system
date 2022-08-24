@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 
+import PaloITLogo from '../assets/palo_it_logo.png';
 import { GlobalLayout } from '../components/Layouts';
 
 const LandingPage = (props) => {
@@ -15,6 +16,7 @@ const LandingPage = (props) => {
 		<GlobalLayout>
 			<Grid container spacing={2}>
 				<Grid item sm={12} md={6}>
+					<img src={PaloITLogo} alt="PALO IT" width={100} />
 					<Box
 						sx={{
 							fontWeight: 700,

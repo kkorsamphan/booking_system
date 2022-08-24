@@ -40,6 +40,7 @@ const AppLayout = ({ title, children }) => {
 					}}
 				>
 					<LinkButton
+						testId="logout-button"
 						label="Logout"
 						labelColor="#FFFFFF"
 						onClick={() => {

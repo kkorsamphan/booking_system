@@ -13,7 +13,7 @@ import * as UserService from '../services/user';
 import { LinkButton } from '../components/Buttons';
 import { RoomCard } from '../components/Cards';
 import { BookingDialog } from '../components/Dialogs';
-import { BookingForm } from '../components/Form';
+import { FindRoomForm } from '../components/Form';
 import { AppLayout } from '../components/Layouts';
 
 const BookingPage = (props) => {
@@ -85,7 +85,7 @@ const BookingPage = (props) => {
 		<AppLayout title={pageTitle}>
 			<Box sx={{ textAlign: 'right', mb: 4 }}>
 				<LinkButton
-					data-testid="booking-page-my-bookings-button"
+					testId="booking-page-my-bookings-button"
 					icon={<EventAvailableIcon />}
 					label="My Bookings"
 					onClick={() => {
@@ -93,7 +93,7 @@ const BookingPage = (props) => {
 					}}
 				/>
 			</Box>
-			<BookingForm handleFindRoom={handleFindRoom} />
+			<FindRoomForm handleFindRoom={handleFindRoom} />
 			{showRooms && rooms.length === 0 && (
 				<Box sx={{ color: '#888888', py: 12, textAlign: 'center' }}>
 					No available room. Please select alternative preferences.

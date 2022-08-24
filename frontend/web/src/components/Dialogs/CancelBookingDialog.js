@@ -11,13 +11,8 @@ const CancelBookingDialog = ({
 	onCancel
 }) => {
 	return (
-		<Dialog
-			fullWidth
-			open={openDialog}
-			onClose={onCancel}
-			data-testid="cancel-booking-dialog"
-		>
-			<Box sx={{ p: 4 }}>
+		<Dialog fullWidth open={openDialog} onClose={onCancel}>
+			<Box sx={{ p: 4 }} data-testid="cancel-booking-dialog">
 				<Box sx={{ fontWeight: 700, fontSize: 28 }}>
 					{'Cancel Booking'}
 				</Box>

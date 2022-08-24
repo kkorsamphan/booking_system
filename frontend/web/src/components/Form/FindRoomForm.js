@@ -10,7 +10,7 @@ import FormInput from './FormInput';
 import FormDatePicker from './FormDatePicker';
 import FormTimePicker from './FormTimePicker';
 
-const FindBookingValidationSchema = Yup.object().shape({
+const FindRoomFormValidationSchema = Yup.object().shape({
 	roomSize: Yup.number()
 		.required('Number of guest is required.')
 		.positive()
@@ -20,7 +20,7 @@ const FindBookingValidationSchema = Yup.object().shape({
 	endTime: Yup.string().required('End time is required.')
 });
 
-const BookingForm = ({ handleFindRoom }) => {
+const FindRoomForm = ({ handleFindRoom }) => {
 	const [datePickerOpen, setDatePickerOpen] = useState(false);
 	const [startTimePickerOpen, setStartTimePickerOpen] = useState(false);
 	const [endTimePickerOpen, setEndTimePickerOpen] = useState(false);
@@ -33,9 +33,8 @@ const BookingForm = ({ handleFindRoom }) => {
 			endTime: ''
 		},
 		validateOnMount: true,
-		validationSchema: FindBookingValidationSchema,
+		validationSchema: FindRoomFormValidationSchema,
 		onSubmit: async (values, { setSubmitting }) => {
-			console.log(values);
 			setSubmitting(false);
 
 			const dateFormat = moment(values.date).format('MM/DD/YYYY');
@@ -95,12 +94,7 @@ const BookingForm = ({ handleFindRoom }) => {
 				<Grid item md={3}>
 					<FormTimePicker
 						data-testid="find-room-form-start-time-select"
-						dateInputProps={{
-							'data-testid': 'find-room-form-start-time-input'
-						}}
-						selectMenuProps={{
-							'data-testid': 'find-room-form-start-time-dialog'
-						}}
+						disabled={!formik.values.date}
 						fullWidth
 						label="Start Time"
 						placeholder="Select start time"
@@ -117,17 +111,18 @@ const BookingForm = ({ handleFindRoom }) => {
 							setStartTimePickerOpen(false);
 							setEndTimePickerOpen(true);
 						}}
+						dateInputProps={{
+							'data-testid': 'find-room-form-start-time-input'
+						}}
+						selectMenuProps={{
+							'data-testid': 'find-room-form-start-time-dialog'
+						}}
 					/>
 				</Grid>
 				<Grid item md={3}>
 					<FormTimePicker
 						data-testid="find-room-form-end-time-select"
-						dateInputProps={{
-							'data-testid': 'find-room-form-end-time-input'
-						}}
-						selectMenuProps={{
-							'data-testid': 'find-room-form-end-time-dialog'
-						}}
+						disabled={!formik.values.date}
 						fullWidth
 						label="End Time"
 						placeholder="Select end time"
@@ -140,6 +135,12 @@ const BookingForm = ({ handleFindRoom }) => {
 							formik.setFieldValue('endTime', value);
 
 							setEndTimePickerOpen(false);
+						}}
+						dateInputProps={{
+							'data-testid': 'find-room-form-end-time-input'
+						}}
+						selectMenuProps={{
+							'data-testid': 'find-room-form-end-time-dialog'
 						}}
 					/>
 				</Grid>
@@ -164,4 +165,4 @@ const BookingForm = ({ handleFindRoom }) => {
 	);
 };
 
-export default BookingForm;
+export default FindRoomForm;

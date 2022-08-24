@@ -22,17 +22,21 @@ const RoomCard = ({ name, size, disabledAction, onChoosingRoom }) => {
 			}}
 			data-testid="room-card"
 		>
-			<CardActionArea disabled={disabledAction} onClick={onChoosingRoom}>
+			<CardActionArea
+				disabled={disabledAction}
+				onClick={onChoosingRoom}
+				data-testid="room-card-button"
+			>
 				<CardContent sx={{ display: 'flex', py: 4, px: 2 }}>
 					<Box
 						sx={{ flex: 1, fontSize: 18, fontWeight: 700 }}
-						data-testid="room-card-room-name"
+						data-testid="room-card-name"
 					>
 						Room {name}
 					</Box>
 					<Box
 						sx={{ flex: 1, fontSize: 18, textAlign: 'right' }}
-						data-testid="room-card-room-size"
+						data-testid="room-card-size"
 					>
 						{size} Guests max
 					</Box>

@@ -96,7 +96,7 @@ const MyBookingPage = (props) => {
 		<AppLayout title={'My Booking History'}>
 			<Box sx={{ textAlign: 'right', mb: 4 }}>
 				<LinkButton
-					data-testid="my-booking-page-make-booking-button"
+					testId="my-booking-page-make-booking-button"
 					icon={<EventIcon />}
 					label="Make New Booking"
 					onClick={() => {

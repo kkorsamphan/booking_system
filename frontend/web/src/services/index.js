@@ -35,4 +35,4 @@ const request = (url, method, payload) => {
 		});
 };
 
-export { request };
+export { API_URL, request };

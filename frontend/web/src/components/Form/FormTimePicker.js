@@ -43,6 +43,7 @@ const FormTimePicker = ({
 	label,
 	placeholder,
 	fullWidth,
+	disabled,
 	open,
 	onTogglePicker,
 	value,
@@ -63,9 +64,12 @@ const FormTimePicker = ({
 			)}
 			<Box>
 				<Select
+					disabled={disabled}
 					open={open}
 					onOpen={() => {
-						onTogglePicker(true);
+						if (!disabled) {
+							onTogglePicker(true);
+						}
 					}}
 					onClose={() => {
 						onTogglePicker(false);
@@ -81,7 +85,7 @@ const FormTimePicker = ({
 							style={{ textAlign: 'center' }}
 							placeholder={placeholder}
 							onClick={() => {
-								if (onTogglePicker) {
+								if (onTogglePicker && !disabled) {
 									onTogglePicker(!open);
 								}
 							}}
@@ -92,11 +96,12 @@ const FormTimePicker = ({
 						disableEnforceFocus: true
 					}}
 				>
-					<MenuItem value="">
+					<MenuItem data-testid="time-picker-item" value="">
 						<span style={{ color: '#888888' }}>{placeholder}</span>
 					</MenuItem>
 					{times.map((time) => (
 						<MenuItem
+							data-testid="time-picker-item"
 							key={time.label}
 							value={time.format}
 							disabled={time.value <= minTime}

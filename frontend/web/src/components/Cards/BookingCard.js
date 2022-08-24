@@ -33,15 +33,12 @@ const BookingCard = ({
 				</Box>
 				<Box sx={{ display: 'flex', my: 1 }}>
 					<Box
-						data-testid="booking-card-booking-room-name"
+						data-testid="booking-card-room-name"
 						sx={{ flex: 1, maxWidth: 120 }}
 					>
 						Room {roomName}
 					</Box>
-					<Box
-						data-testid="booking-card-booking-room-size"
-						sx={{ flex: 1 }}
-					>
+					<Box data-testid="booking-card-room-size" sx={{ flex: 1 }}>
 						{roomSize} Guests max
 					</Box>
 				</Box>
