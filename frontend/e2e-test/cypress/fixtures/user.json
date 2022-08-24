@@ -1,0 +1,20 @@
+{
+    "userId": "bbaabb3e-b07d-4c55-86a1-53145997e945",
+    "email": "xxx+user1@example.com",
+    "firstName": "User 1",
+    "lastName": "Test",
+    "bookings": [
+        {
+            "bookingId": "ca7f76e6-99e6-49b0-8cba-07ce84546988",
+            "startTime": "2022-08-07T19:00:00Z",
+            "endTime": "2022-08-07T18:00:00Z",
+            "status": "cancelled",
+            "bookingNumber": "BA00001",
+            "room": {
+                "roomId": "31a75bad-e1f3-42dd-9a23-79db8fc8ad96",
+                "name": "A006",
+                "size": 20
+            }
+        }
+    ]
+}

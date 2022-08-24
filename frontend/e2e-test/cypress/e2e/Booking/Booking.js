@@ -5,24 +5,6 @@ import {
 	And
 } from '@badeball/cypress-cucumber-preprocessor';
 
-Given('I visit the website', () => {
-	cy.visit('/');
-});
-
-And(
-	'I logged in with email value {string} and password value {string}',
-	(email, password) => {
-		cy.get(`[data-testid="landing-page-login-button"]`).click();
-		cy.get(`[data-testid="login-form-email-input"]`).type(email);
-		cy.get(`[data-testid="login-form-password-input"]`).type(password);
-		cy.get(`[data-testid="login-form-login-button"]`).click();
-	}
-);
-
-Then('I should see a booking page', () => {
-	cy.contains('Make My Booking');
-});
-
 And('I fill in the number of guest field with value {int}', (guestNumber) => {
 	cy.get(`[data-testid="find-room-form-guest-number"]`).type(guestNumber);
 });
@@ -70,40 +52,22 @@ And('I choose the end time with value of current date at {int} AM', (hour) => {
 	).click();
 });
 
-When('I click a find room button', () => {
-	cy.get('[data-testid="find-room-form-find-room-button"]').click();
+When('I click on a Find Room button to search', () => {
+	cy.intercept({
+		method: 'GET',
+		url: 'http://localhost:8091/api/rooms?roomSize=1&startTime=2022-08-24T02:00:00.000Z&endTime=2022-08-24T03:00:00.000Z'
+	}).as('apiCheck');
+
+	cy.get(`[data-testid="find-room-form-find-room-button"]`).click();
+	cy.wait(['@apiCheck']);
 });
 
-Then('I should see a room list', () => {
-	cy.get('[data-testid="booking-page-room-available-room-list"]').should(
-		'be.visible'
-	);
-});
-
-When('I click a room card', () => {
+When('I click on a room card', () => {
 	cy.get(`[data-testid="room-card"]`)
 		.first()
 		.within(() => {
-			cy.get('button').click();
+			cy.get('[data-testid="room-card-button"]').click();
 		});
-});
-
-Then('I should see a booking summary dialog', () => {
-	cy.get(`[data-testid="booking-dialog"]`)
-		.should('be.visible')
-		.contains('Booking Summary');
-});
-
-And('I should see a confirm button', () => {
-	cy.get('button').contains('Confirm Booking');
-});
-
-When('I click on a confirm button', () => {
-	cy.get('[data-testid="booking-dialog-confirm-booking-button"]').click();
-});
-
-Then('I should see a booking confirmation page', () => {
-	cy.contains('Booking Successful');
 });
 
 And('I should see my booking number', () => {
