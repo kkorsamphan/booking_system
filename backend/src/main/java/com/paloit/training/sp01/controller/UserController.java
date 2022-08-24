@@ -39,6 +39,18 @@ public class UserController {
         this.bookingService = bookingService;
     }
 
+    @DeleteMapping("/users/{email}")
+    public ResponseEntity<Object> deleteUser(@PathVariable String email) {
+        try {
+            userService.deleteUserByEmail(email);
+            return ResponseEntity.ok().build();
+
+        } catch (UserNotFoundException exc){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "User not found.", exc);
+        }
+    }
+
     @GetMapping("/users/{userId}/bookings")
     public ResponseEntity<List<Booking>> getUserBookingById(@PathVariable UUID userId) {
         try {

@@ -308,4 +308,28 @@ public class UserControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
+    @Test
+    public void deleteUser_UserExists_ReturnedSuccessfully_200() {
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/users/{email}", testUser.getEmail())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void deleteUser_UserNotExists_ReturnedSuccessfully_404() {
+        given().log().all()
+                .with()
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/users/{email}", "non_user@example.com")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
 }

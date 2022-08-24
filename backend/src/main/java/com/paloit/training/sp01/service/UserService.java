@@ -25,6 +25,15 @@ public class UserService {
                 });
     }
 
+    public void deleteUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    throw new UserNotFoundException("User not found.");
+                 });
+
+        userRepository.deleteById(user.getUserId());
+    }
+
     public ArrayList<Booking> getUserBookings(UUID userId) {
 
         User user =  userRepository.findById(userId)

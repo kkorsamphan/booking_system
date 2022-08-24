@@ -23,7 +23,7 @@ public class Room {
     // @JsonManagedReference
 
     // mapped by entity
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("room")
     private List<Booking> bookings;
 }
