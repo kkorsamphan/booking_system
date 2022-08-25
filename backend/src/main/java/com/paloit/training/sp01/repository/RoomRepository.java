@@ -15,17 +15,19 @@ public interface RoomRepository extends PagingAndSortingRepository<Room, UUID> {
     @Query("" +
             "SELECT DISTINCT r " +
             "FROM Room r " +
-            "LEFT JOIN r.bookings bk " +
-            "WHERE r.size >= :roomSize " +
-            "AND ( " +
-                "bk IS NULL " +
-                "OR NOT (" +
-                    "( :startTime > bk.startTime OR :endTime > bk.startTime )" +
-                    "AND ( :startTime < bk.endTime OR :endTime < bk.endTime )" +
-                    "AND bk.status IN ('reserved', 'completed')" +
-                ")" +
-            ")"
+            "WHERE NOT EXISTS (" +
+                "SELECT bk.room.roomId " +
+                "FROM Booking bk " +
+                "WHERE bk.status IN ('reserved', 'completed') " +
+                "AND (" +
+                    "(:startTime > bk.startTime OR :endTime > bk.startTime) " +
+                    "AND (:startTime < bk.endTime OR :endTime <  bk.endTime)" +
+                ") " +
+                "AND bk.room.roomId = r.roomId" +
+            ") " +
+            "AND r.size >= :roomSize"
     )
+
     List<Room> findAvailableRooms(
             @Param("roomSize") Integer roomSize,
             @Param("startTime") Instant startTime,
